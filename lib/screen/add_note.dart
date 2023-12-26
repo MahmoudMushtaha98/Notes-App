@@ -22,16 +22,32 @@ class _AddNoteState extends State<AddNote> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: () async{
-            int response = await myDB.insertData(title: _controllerTitle.text.isNotEmpty ? _controllerTitle.text : 'title',
-                subTitle: _controllerGraph.text.isNotEmpty ? _controllerGraph.text : 'write ...',
-                date: '${dateTime.day} - ${dateTime.month} - ${dateTime.year}',
-                time: '${dateTime.hour} : ${dateTime.minute} : ${dateTime.second}');
-            print(response);
-            Navigator.pop(context);
-          }, icon: const Icon(
-            Icons.add,
-          ),)
+          IconButton(
+            onPressed: () async {
+              await myDB.insertData(
+                  title: _controllerTitle.text.isNotEmpty
+                      ? _controllerTitle.text
+                      : 'title',
+                  subTitle: _controllerGraph.text.isNotEmpty
+                      ? _controllerGraph.text
+                      : 'write ...',
+                  date:
+                      '${dateTime.day} - ${dateTime.month} - ${dateTime.year}',
+                  time:
+                      '${dateTime.hour} : ${dateTime.minute} : ${dateTime.second}');
+              if (mounted) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ),
+                    (route) => false);
+              }
+            },
+            icon: const Icon(
+              Icons.add,
+            ),
+          )
         ],
       ),
       body: Column(
@@ -49,20 +65,16 @@ class _AddNoteState extends State<AddNote> {
                 label: checkTitle
                     ? null
                     : Text(
-                  'Title',
-                  style:
-                  TextStyle(fontSize: mediaQuery(context, 1) * 0.1),
-                ),
+                        'Title',
+                        style:
+                            TextStyle(fontSize: mediaQuery(context, 1) * 0.1),
+                      ),
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .scaffoldBackgroundColor)),
+                        color: Theme.of(context).scaffoldBackgroundColor)),
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .scaffoldBackgroundColor))),
+                        color: Theme.of(context).scaffoldBackgroundColor))),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8),
@@ -70,8 +82,8 @@ class _AddNoteState extends State<AddNote> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('${dateTime.day} - ${dateTime.month} - ${dateTime.year}'),
-                Text('${dateTime.hour} : ${dateTime.minute} : ${dateTime
-                    .second}'),
+                Text(
+                    '${dateTime.hour} : ${dateTime.minute} : ${dateTime.second}'),
               ],
             ),
           ),
@@ -79,27 +91,22 @@ class _AddNoteState extends State<AddNote> {
             controller: _controllerGraph,
             onTap: () {
               setState(() {
-                checkTitle = true;
+                checkGraph = true;
               });
             },
             maxLines: checkGraph ? 10 : 2,
             decoration: InputDecoration(
                 label: checkGraph
                     ? null
-                    : Text(
-                  'write ...',
-
-                ),
+                    : const Text(
+                        'write ...',
+                      ),
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .scaffoldBackgroundColor)),
+                        color: Theme.of(context).scaffoldBackgroundColor)),
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .scaffoldBackgroundColor))),
+                        color: Theme.of(context).scaffoldBackgroundColor))),
           ),
         ],
       ),

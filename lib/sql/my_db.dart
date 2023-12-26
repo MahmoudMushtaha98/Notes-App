@@ -51,4 +51,11 @@ CREATE TABLE NOTES(
     List<Map<String, Object?>> response = await myDb!.rawQuery('SELECT * FROM NOTES');
     return response;
   }
+
+
+  Future<int> updateData(String title,String subTitle,int id)async{
+    Database? myDb = await db;
+    Future<int> response = myDb!.rawUpdate("UPDATE NOTES SET title = '$title', subTitle = '$subTitle' WHERE id = $id");
+    return response;
+  }
 }

@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import '../screen/home.dart';
 
 class BuildNotesWidget extends StatelessWidget {
-  BuildNotesWidget({
+  const BuildNotesWidget({
     super.key,
     required this.title, required this.subTitle, required this.date, required this.time,
   });
 
-  DateTime dateTime = DateTime.now();
   final String title;
   final String subTitle;
   final String date;
@@ -66,9 +65,11 @@ class BuildNotesWidget extends StatelessWidget {
                 flex: 2,
                 child: Container(
                   alignment: Alignment.centerLeft,
-                  child: SizedBox(
+                  child: Container(
+                    alignment: Alignment.centerLeft,
                     height: mediaQuery(context, 0)*0.05,
                     child: Text(subTitle,
+                        maxLines: 1,
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.6),
                             overflow: TextOverflow.ellipsis)),

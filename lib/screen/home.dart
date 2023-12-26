@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:note_app/model/note_details_model.dart';
+import 'package:note_app/screen/note_screen.dart';
 import 'package:note_app/sql/my_db.dart';
 
 import '../widget/notes_widgets.dart';
@@ -12,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   MyDB myDB = MyDB();
 
   List<Map> notes = [];
@@ -24,21 +25,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void getData() async {
+
     notes = await myDB.readData();
   }
 
   @override
   Widget build(BuildContext context) {
-    notes.forEach((element) {
-      element.forEach((key, value) {
-        print('$key : $value');
-      });
-    });
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const AddNote(),)),
+        onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddNote(),
+            )),
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
@@ -49,18 +48,40 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SizedBox(
         width: double.infinity,
-        child: Column(
-          children: List.generate(notes.length, (index) {
-            return Column(
-              children: [
-                SizedBox(height: mediaQuery(context, 0)*0.05,),
-                BuildNotesWidget(
-                  time: notes[index]['time'],
-                  date: notes[index]['date'],
-                  subTitle: notes[index]['subTitle'],title: notes[index]['title'],),
-              ],
-            );
-          }),
+        child: SingleChildScrollView(
+          child: Column(
+            children: List.generate(notes.length, (index) {
+              return Column(
+                children: [
+                  SizedBox(
+                    height: mediaQuery(context, 0) * 0.05,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NoteScreen(
+                              noteDetailsModel: NoteDetailsModel(
+                                  id: notes[index]['id'],
+                                  title: notes[index]['title'],
+                                  subTitle: notes[index]['subTitle'],
+                                  date: notes[index]['date'],
+                                  time: notes[index]['time']),
+                            ),
+                          ));
+                    },
+                    child: BuildNotesWidget(
+                      time: notes[index]['time'],
+                      date: notes[index]['date'],
+                      subTitle: notes[index]['subTitle'],
+                      title: notes[index]['title'],
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );
@@ -69,12 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
 double mediaQuery(BuildContext context, int number) {
   return number == 0
-      ? MediaQuery
-      .of(context)
-      .size
-      .height
-      : MediaQuery
-      .of(context)
-      .size
-      .width;
+      ? MediaQuery.of(context).size.height
+      : MediaQuery.of(context).size.width;
 }
